@@ -1,6 +1,6 @@
 const express = require("express");
 const axios = require("axios");
-const pool = require("../db");
+const pool = require("../db").default;
 const router = express.Router();
 
 const AI_API_URL = process.env.AI_API_URL || "http://localhost:5000/predict";
