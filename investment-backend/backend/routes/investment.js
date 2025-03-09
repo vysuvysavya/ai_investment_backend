@@ -99,7 +99,6 @@ router.post("/dashboard", async (req, res) => {
       financial_literacy,
     } = req.body;
 
-    // Send only required fields to AI API
     const aiRequestBody = {
       individual_goals,
       age,
