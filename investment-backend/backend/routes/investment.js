@@ -88,11 +88,10 @@ router.post("/onboarding", async (req, res) => {
     res.status(500).json({ error: "Error registering user" });
   }
 });
-
 router.post("/dashboard", async (req, res) => {
   try {
     const {
-      user_id,
+      user_id, // Keep this for database storage
       individual_goals,
       age,
       gender,
@@ -100,7 +99,17 @@ router.post("/dashboard", async (req, res) => {
       financial_literacy,
     } = req.body;
 
-    const response = await axios.post(AI_API_URL, req.body);
+    // Send only required fields to AI API
+    const aiRequestBody = {
+      individual_goals,
+      age,
+      gender,
+      risk_tolerance,
+      financial_literacy,
+    };
+
+    const response = await axios.post(AI_API_URL, aiRequestBody);
+
     const recommended_products = JSON.stringify(
       response.data.recommended_products
     );
@@ -121,7 +130,10 @@ router.post("/dashboard", async (req, res) => {
 
     res.json({ success: true, recommended_products });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Error in /dashboard:",
+      error.response?.data || error.message
+    );
     res
       .status(500)
       .json({ error: "Error processing investment recommendation" });
