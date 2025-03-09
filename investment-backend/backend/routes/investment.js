@@ -50,7 +50,7 @@ router.post("/onboarding", async (req, res) => {
       financial_literacy,
       address,
       risk_tolerance,
-      financial_goals,
+      individual_goals,
       password,
       investment_type,
       name,
@@ -63,7 +63,7 @@ router.post("/onboarding", async (req, res) => {
 
     const result = await pool.query(
       `INSERT INTO users (age, monthly_income, current_saving, financial_literacy, address, risk_tolerance, 
-                          financial_goals, password, investment_type, name, gender, email, phone_number) 
+                          individual_goals, password, investment_type, name, gender, email, phone_number) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING user_id`,
       [
         age,
@@ -72,7 +72,7 @@ router.post("/onboarding", async (req, res) => {
         financial_literacy,
         address,
         risk_tolerance,
-        financial_goals,
+        individual_goals,
         hashedPassword,
         investment_type,
         name,
