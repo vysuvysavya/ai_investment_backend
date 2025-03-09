@@ -4,7 +4,7 @@ const pool = require("../db").default;
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 
-const AI_API_URL = process.env.AI_API_URL || "http://localhost:5000/predict";
+const AI_API_URL = process.env.AI_API_URL;
 
 router.post("/signin", async (req, res) => {
   try {
