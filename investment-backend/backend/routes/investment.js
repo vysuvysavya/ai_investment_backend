@@ -99,17 +99,27 @@ router.post("/dashboard", async (req, res) => {
       financial_literacy,
     } = req.body;
 
-    const response = await axios.post(AI_API_URL, req.body);
+    const aiRequestBody = {
+      individual_goals,
+      age,
+      gender,
+      risk_tolerance,
+      financial_literacy,
+    };
+
+    const response = await axios.post(AI_API_URL, aiRequestBody);
     const recommended_products = JSON.stringify(
       response.data.recommended_products
     );
 
+    // Check if the user already has a recommendation
     const existingRecord = await pool.query(
       "SELECT id FROM investment_recommendations WHERE user_id = $1",
       [user_id]
     );
 
     if (existingRecord.rows.length > 0) {
+      // Update the existing recommendation
       await pool.query(
         `UPDATE investment_recommendations 
          SET individual_goals = $1, age = $2, gender = $3, risk_tolerance = $4, 
@@ -132,9 +142,9 @@ router.post("/dashboard", async (req, res) => {
         recommended_products,
       });
     } else {
+      // Insert a new recommendation
       await pool.query(
-        `INSERT INTO investment_recommendations 
-         (user_id, individual_goals, age, gender, risk_tolerance, financial_literacy, recommended_products) 
+        `INSERT INTO investment_recommendations (user_id, individual_goals, age, gender, risk_tolerance, financial_literacy, recommended_products) 
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
         [
           user_id,
@@ -154,7 +164,10 @@ router.post("/dashboard", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Error in /dashboard:",
+      error.response?.data || error.message
+    );
     res
       .status(500)
       .json({ error: "Error processing investment recommendation" });
