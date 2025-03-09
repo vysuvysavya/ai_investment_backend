@@ -142,7 +142,6 @@ router.post("/dashboard", async (req, res) => {
         recommended_products,
       });
     } else {
-      // Insert a new recommendation
       await pool.query(
         `INSERT INTO investment_recommendations (user_id, individual_goals, age, gender, risk_tolerance, financial_literacy, recommended_products) 
          VALUES ($1, $2, $3, $4, $5, $6, $7)`,
